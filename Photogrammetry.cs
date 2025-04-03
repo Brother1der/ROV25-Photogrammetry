@@ -28,7 +28,7 @@ class Program
     [STAThread]
     static void Main()
     {
-        string cameraUrl = "http://your_camera_ip/mjpeg"; // Replace with your IP camera's MJPEG stream URL
+        string cameraUrl = "http://your_camera_ip/mjpeg"; // Replace with IP camera's MJPEG stream URL
         stream = new MJPEGStream(cameraUrl);
         stream.NewFrame += OnNewFrame;
         stream.Start();
