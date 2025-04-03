@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Timers;
@@ -16,6 +17,7 @@ class Program
     private static readonly string savePath = "captured_frame_{0}.jpg";
     private static int capturedFrames = 0;
     private const int WM_HOTKEY = 0x0312;
+    private static readonly string batchFilePath = "your_script.bat"; // Change to your actual .bat file path
 
     [DllImport("user32.dll")]
     private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
@@ -26,7 +28,7 @@ class Program
     [STAThread]
     static void Main()
     {
-        string cameraUrl = "http//unknown"; // Replace with camera's stream URL
+        string cameraUrl = "http://your_camera_ip/mjpeg"; // Replace with your IP camera's MJPEG stream URL
         stream = new MJPEGStream(cameraUrl);
         stream.NewFrame += OnNewFrame;
         stream.Start();
@@ -41,7 +43,7 @@ class Program
         if (!isCapturing) return;
         
         frameCount++;
-        if (frameCount % 5 == 0) // Captures every 5th frame from camera
+        if (frameCount % 5 == 0) // Capture every 5th frame
         {
             using (Bitmap capturedFrame = (Bitmap)eventArgs.Frame.Clone())
             {
@@ -89,6 +91,23 @@ class Program
         isCapturing = false;
         captureTimer?.Dispose();
         MessageBox.Show("Frame capture stopped after 1 minute.", "Capture Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        RunBatchFile();
+    }
+
+    private static void RunBatchFile()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = batchFilePath,
+                UseShellExecute = true,
+                CreateNoWindow = true
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to run batch file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 }
-//need to add a script that runs the bat file that i will make later.
