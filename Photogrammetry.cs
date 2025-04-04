@@ -17,7 +17,7 @@ class Program
     private static readonly string savePath = "captured_frame_{0}.jpg";
     private static int capturedFrames = 0;
     private const int WM_HOTKEY = 0x0312;
-    private static readonly string batchFilePath = "your_script.bat"; // Change to your actual .bat file path
+    private static readonly string batchFilePath = "your_script.bat"; // Change to the vbs file path so that the CMD prompt doesn't show up.
 
     [DllImport("user32.dll")]
     private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
