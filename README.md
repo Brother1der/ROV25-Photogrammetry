@@ -1,6 +1,6 @@
 # ROV25-Photogrammetry
 
-Welcome: This is the repository for a WIP system to run photogrammetry while the ROV is being driven. It contains code for the process of taking JPEG images from a camera, and inserting them into PTGUI, the selected photogrammetry software for the ROV.
+Welcome: This is the repository for a WIP system that runs photogrammetry while the ROV is being driven. It contains code for taking JPEG images from a camera and inserting them into PTGUI, the ROV's selected photogrammetry software.
 
 ## Workflow
 
