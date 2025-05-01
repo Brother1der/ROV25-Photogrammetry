@@ -1,8 +1,9 @@
 from moviepy.editor import VideoFileClip
 import os
+import subprocess #possibly starts a vbs file
 
 print('Enter Video File:')
-videoFile = input()
+videoFile = input() # This will be changed to a more automated process
 print('Enter Directory:')
 imageDirectory = input()
 
@@ -26,6 +27,10 @@ video = VideoFileClip(videoFile)
 
 # Call the function
 extract_frames(video, imageDirectory)
+
+#Run VBS file
+subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
+subprocess.run(["cscript scriptname.vbs"], shell=True)
 
 # Close the video clip to release resources
 video.close()
