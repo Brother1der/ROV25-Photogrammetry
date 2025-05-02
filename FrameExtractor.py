@@ -31,11 +31,11 @@ video = VideoFileClip(videoFile)
 # Creates the hotkey
 keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
-keyboard.wait('esc')  # Wait for the 'esc' key to be pressed to exit the program
-
 # Run VBS file
-#subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
-#subprocess.run(["cscript scriptname.vbs"], shell=True)
+subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
+subprocess.run(["cscript scriptname.vbs"], shell=True)
+
+keyboard.wait('esc')  # Wait for the 'esc' key to be pressed to exit the program
 
 # Close the video clip to release resources
 video.close()
