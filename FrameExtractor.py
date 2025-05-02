@@ -3,10 +3,11 @@ import os
 import subprocess #possibly starts a vbs file
 import keyboard
 
-videoFile = 'replace_with_dir'
-imageDirectory = 'replace_with_dir'
+videoFile = r'replace_with_dir'
+imageDirectory = r'replace_with_dir'
 
 def start_hotkey(): # Creates the hotkey's function
+    print("Hotkey pressed")
     extract_frames(video, imageDirectory) # Calls extraction function
 
 def extract_frames(video, imageDirectory):
@@ -24,17 +25,17 @@ def extract_frames(video, imageDirectory):
             video.save_frame(imagepath, t)
             print(f"Saved frame at {t} seconds: {imagepath}")
 
-# Creates the hotkey
-keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
-
 # Create the VideoFileClip object
 video = VideoFileClip(videoFile)
 
-keyboard.wait
+# Creates the hotkey
+keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
+
+keyboard.wait('esc')  # Wait for the 'esc' key to be pressed to exit the program
 
 # Run VBS file
-subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
-subprocess.run(["cscript scriptname.vbs"], shell=True)
+#subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
+#subprocess.run(["cscript scriptname.vbs"], shell=True)
 
 # Close the video clip to release resources
 video.close()
