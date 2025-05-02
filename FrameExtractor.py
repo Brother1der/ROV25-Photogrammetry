@@ -41,8 +41,8 @@ def extract_frames(video, imageDirectory):
             video.save_frame(imagepath, t)
             print(f"Saved frame at {t} seconds: {imagepath}")
     # Run VBS file
-    subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
-    subprocess.run(["cscript scriptname.vbs"], shell=True)
+    #subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
+    #subprocess.run(["cscript scriptname.vbs"], shell=True)
 
 # Create the VideoFileClip object
 video = VideoFileClip(videoFile)
