@@ -39,3 +39,4 @@ keyboard.wait('esc')  # Wait for the 'esc' key to be pressed to exit the program
 
 # Close the video clip to release resources
 video.close()
+print("test")
