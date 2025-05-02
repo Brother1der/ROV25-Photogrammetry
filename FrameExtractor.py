@@ -6,10 +6,11 @@ import pyautogui
 import cv2
 import numpy as n2
 import time
+import datetime
 
 resolution = (1920, 1080)
 codec = cv2.VideoWriter_fourcc(*mp4v)
-filename = "Recording.mp4" # names file
+filename = "Recording.mp4" # name of file
 fps = 30.0 # fps of file
 out = cv2.VideoWriter(filename, codec, fps, resolution)
 
