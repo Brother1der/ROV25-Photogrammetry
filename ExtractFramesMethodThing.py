@@ -1,11 +1,13 @@
 from moviepy.editor import VideoFileClip
 import os
 import subprocess #possibly starts a vbs file
+import keyboard
 
-print('Enter Video File:')
-videoFile = input() # This will be changed to a more automated process
-print('Enter Directory:')
-imageDirectory = input()
+videoFile = 'replace_with_dir'
+imageDirectory = 'replace_with_dir'
+
+def start_hotkey(): # Creates the hotkey's function
+    extract_frames(video, imageDirectory) # Calls extraction function
 
 def extract_frames(video, imageDirectory):
     if not os.path.exists(imageDirectory):
@@ -22,13 +24,15 @@ def extract_frames(video, imageDirectory):
             video.save_frame(imagepath, t)
             print(f"Saved frame at {t} seconds: {imagepath}")
 
+# Creates the hotkey
+keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
+
 # Create the VideoFileClip object
 video = VideoFileClip(videoFile)
 
-# Call the function
-extract_frames(video, imageDirectory)
+keyboard.wait
 
-#Run VBS file
+# Run VBS file
 subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
 subprocess.run(["cscript scriptname.vbs"], shell=True)
 
