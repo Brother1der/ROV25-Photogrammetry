@@ -10,9 +10,9 @@ import datetime
 
 resolution = (1920, 1080)
 codec = cv2.VideoWriter_fourcc(*mp4v)
-filename = "Recording.mp4" # name of file
 fps = 30.0 # fps of file
-out = cv2.VideoWriter(filename, codec, fps, resolution)
+output_path = 'path/to/your/directory/output.mp4' # Specify the output path
+out = cv2.VideoWriter(output_path, codec, fps, resolution)
 
 def video_capture_loop(seconds):
     start_time = time.time()
