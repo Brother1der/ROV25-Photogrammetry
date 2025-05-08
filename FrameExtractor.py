@@ -33,9 +33,9 @@ def extract_frames(video, imageDirectory):
     if not os.path.exists(imageDirectory):
         os.makedirs(imageDirectory)
 
-    frame_rate = video.fps
-    num_frames = int(video.fps * video.duration)
-   
+    frame_rate = int(video.get(cv2.CAP_PROP_FPS))  # Get FPS from video
+    num_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))  # Get total frame count
+s   
     for i in range(num_frames):
         if i % 5 == 0:  # Save every 5 frames
             t = i / frame_rate
