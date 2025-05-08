@@ -10,10 +10,11 @@ import datetime
 
 #could replace entire system with automated screenshots
 resolution = (1920, 1080)
-codec = cv2.VideoWriter_fourcc(*mp4v)
+codec = cv2.VideoWriter_fourcc(*'mp4v')
 fps = 30.0 # fps of file
 output_path = 'path/to/your/directory/output.mp4' # Specify the output path
 out = cv2.VideoWriter(output_path, codec, fps, resolution)
+imageDirectory = 'path/to/your/directory/images' # Specify the output path for images
 
 def video_capture_loop(seconds):
     start_time = time.time()
