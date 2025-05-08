@@ -8,6 +8,7 @@ import numpy as n2
 import time
 import datetime
 
+#could replace entire system with automated screenshots
 resolution = (1920, 1080)
 codec = cv2.VideoWriter_fourcc(*mp4v)
 fps = 30.0 # fps of file
