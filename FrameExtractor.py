@@ -17,7 +17,6 @@ imageDirectory = 'path/to/your/directory/images'  # Specify the output path for 
 out = cv2.VideoWriter(output_path, codec, fps, resolution)
 
 def video_capture_loop(seconds):
-    """Captures the screen for a specified duration and writes to a video file."""
     start_time = time.time()
     while (time.time() - start_time) < seconds:
         img = pyautogui.screenshot()
@@ -27,7 +26,6 @@ def video_capture_loop(seconds):
     print("Video capture completed.")
 
 def extract_frames(video_path, imageDirectory):
-    """Extracts frames from a video file and saves them as images."""
     if not os.path.exists(imageDirectory):
         os.makedirs(imageDirectory)
 
