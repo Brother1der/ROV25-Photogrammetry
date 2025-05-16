@@ -4,4 +4,4 @@ Welcome: This is the repository for a WIP system that runs photogrammetry while 
 
 ## Workflow
 
-This repository is only one branch, mainly because the software really isn't that complicated. I'll probably work on organizing it for later if it becomes more complicated. Things may get a little wonky though.
+This repository is stupid mainly because the software really isn't that complicated and doesn't need optimization. I'll probably work on making it more optimized when I'm not stupid.
