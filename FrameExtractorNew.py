@@ -7,9 +7,9 @@ import pyautogui
 fps = 6
 seconds = 5
 output_dir = r"C:\Example\Screenshots"
-ss_num = 1
 
-def get_screenshots(fps, sec, output_dir, ss_num):
+def get_screenshots(fps, sec, output_dir):
+    ss_num = 1
     start_time = time.time()
     while (time.time() - start_time) < seconds:
         if time.time() % (1/fps(ss_num)) == 0:
