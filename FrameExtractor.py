@@ -25,6 +25,49 @@ def extract_frames(video, imageDirectory):
             video.save_frame(imagepath, t)
             print(f"Saved frame at {t} seconds: {imagepath}")
 
+def get_latest_file(dir_path):
+    """
+    Gets the latest file in a directory based on modification time.
+
+    Args:
+        dir_path (str): The path to the directory.
+
+    Returns:
+        str: The path to the latest file, or None if the directory is empty or an error occurs.
+    """
+    try:
+        list_of_files = glob.glob(os.path.join(dir_path, '*.mp4'))  # Get list of all mp4 files in directory
+        if not list_of_files:
+            return None  # Return None if directory is empty
+        latest_file = max(list_of_files, key=os.path.getmtime)  # Get file with the latest modification time
+        return latest_file
+    except OSError as e:
+         print(f"Error accessing directory: {e}")
+         return None
+
+def get_raw_string_from_file(file_path):
+    """
+    Reads a text file and returns its content as a raw string.
+
+    Args:
+        file_path (str): The path to the text file.
+
+    Returns:
+        str: The content of the file as a raw string.
+             Returns None if the file cannot be opened.
+    """
+    try:
+        with open(file_path, 'r') as file:
+            content = file.read()
+            raw_content = repr(content)
+            return raw_content
+    except FileNotFoundError:
+        print(f"Error: File not found at path: {file_path}")
+        return None
+    except Exception as e:
+         print(f"An error occurred: {e}")
+         return None
+
 # Create the VideoFileClip object
 video = VideoFileClip(videoFile)
 
