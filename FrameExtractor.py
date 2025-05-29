@@ -1,6 +1,6 @@
 from moviepy.editor import VideoFileClip
 import os
-import subprocess #possibly starts a vbs file
+import subprocess
 import keyboard
 from pymavlink import mavutil
 
