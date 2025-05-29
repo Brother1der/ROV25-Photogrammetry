@@ -11,8 +11,9 @@ connection = mavutil.mavlink_connection('udpin:0.0.0.0.14550') #example pin idk 
 def start_hotkey(): # Creates the hotkey's function
     print("Hotkey pressed")
     connect_to_mavlink()  # Connect to MAVLink
+    time.sleep(1)  # Wait for connection to establish
     start_video_capture()  # Start video capture
-    wait.sleep(1)  # Wait for 1 second before extracting frames
+    time.sleep(1)  # Wait for 1 second before extracting frames
     extract_frames(video, imageDirectory) # Calls extraction function
 
 def extract_frames(video, imageDirectory):
@@ -41,12 +42,15 @@ def start_video_capture():
     msg = connection.message_factory.command_long_encode(
         0, 0,  # target_system, target_component
         mavutil.mavlink.MAV_CMD_VIDEO_START_CAPTURE,  # command
-        0,  # confirmation
-        1,  # param1 (1 to start, 0 to stop)
-        0, 0, 0, 0, 0, 0  # param2, param3, param4, param5, param6, param7
+        0, 0, 0, 0, 0, 0, 0  # param1 param2, param3, param4, param5, param6, param7
+        print("Sent MAV_CMD_VIDEO_START_CAPTURE command")
+        time.sleep(10) # pause prog for 10 sec
+        mavutil.mavlink.MAV_CMD_VIDEO_STOP_CAPTURE  # command to stop video capture
+        0, 0, 0, 0, 0, 0, 0  # param1, param2, param3, param4, param5, param6, param7
+        print("Sent MAV_CMD_VIDEO_STOP_CAPTURE command")
     )
-    connection.send(msg)
-    print("Sent MAV_CMD_VIDEO_START_CAPTURE command")
+    connection.close()
+
 
 # Create the VideoFileClip object
 video = VideoFileClip(videoFile)
@@ -58,7 +62,7 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
 subprocess.run(["cscript scriptname.vbs"], shell=True)
 
-keyboard.wait('esc')  # Wait for the 'esc' key to be pressed to exit the program
-
 # Close the video clip to release resources
 video.close()
+
+sys.exit(0)  # Exit the script
