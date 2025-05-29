@@ -1,5 +1,7 @@
 from moviepy.editor import VideoFileClip
 import os
+import time
+import sys
 import subprocess
 import keyboard
 import glob
@@ -35,6 +37,7 @@ def extract_frames(video, imageDirectory):
             imagepath = os.path.join(imageDirectory, frame_filename)
             video.save_frame(imagepath, t)
             print(f"Saved frame at {t} seconds: {imagepath}")
+    video.close()
 
 def get_latest_file(dir_path):
     """
@@ -85,8 +88,5 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 # Run VBS file
 subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
 subprocess.run(["cscript scriptname.vbs"], shell=True)
-
-# Close the video clip to release resources
-video.close()
 
 sys.exit(0)  # Exit the script
