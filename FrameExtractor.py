@@ -4,7 +4,8 @@ import subprocess
 import keyboard
 from pymavlink import mavutil
 
-videoFile = r'replace_with_dir'
+dir_path = r'replace_with_dir'
+videoFile = (get_latest_file(dir_path))
 imageDirectory = r'replace_with_dir'
 connection = mavutil.mavlink_connection('udpin:0.0.0.0.14550') #example pin idk about mavutil
 
@@ -14,6 +15,7 @@ def start_hotkey(): # Creates the hotkey's function
     time.sleep(1)  # Wait for connection to establish
     start_video_capture()  # Start video capture
     time.sleep(1)  # Wait for 1 second before extracting frames
+    get_latest_file(dir_path)  # Get the latest video file
     extract_frames(video, imageDirectory) # Calls extraction function
 
 def extract_frames(video, imageDirectory):
@@ -30,6 +32,26 @@ def extract_frames(video, imageDirectory):
             imagepath = os.path.join(imageDirectory, frame_filename)
             video.save_frame(imagepath, t)
             print(f"Saved frame at {t} seconds: {imagepath}")
+
+def get_latest_file(dir_path):
+    """
+    Gets the latest file in a directory based on modification time.
+
+    Args:
+        dir_path (str): The path to the directory.
+
+    Returns:
+        str: The path to the latest file, or None if the directory is empty or an error occurs.
+    """
+    try:
+        list_of_files = glob.glob(os.path.join(dir_path, '*.mp4'))  # Get list of all mp4 files in directory
+        if not list_of_files:
+            return None  # Return None if directory is empty
+        latest_file = max(list_of_files, key=os.path.getmtime)  # Get file with the latest modification time
+        return latest_file
+    except OSError as e:
+         print(f"Error accessing directory: {e}")
+         return None
 
 def connect_to_mavlink():
     try:
