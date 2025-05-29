@@ -68,15 +68,21 @@ def connect_to_mavlink():
 
 def start_video_capture():
     msg = connection.message_factory.command_long_encode(
-        0, 0  # target_system, target_component
+        0, 0,  # target_system, target_component
         mavutil.mavlink.MAV_CMD_VIDEO_START_CAPTURE,  # command
-        0, 0, 0, 0, 0, 0, 0  # param1 param2, param3, param4, param5, param6, param7
+        0, 0, 0, 0, 0, 0, 0,
+        # param1, param2, param3, param4, param5, param6, param7
         print("Sent MAV_CMD_VIDEO_START_CAPTURE command")
-        time.sleep(10) # pause prog for 10 sec
-        mavutil.mavlink.MAV_CMD_VIDEO_STOP_CAPTURE  # command to stop video capture
-        0, 0, 0, 0, 0, 0, 0  # param1, param2, param3, param4, param5, param6, param7
+    )
+    msg2 = connection.message_factory.command_long_encode(
+        0, 0,
+        mavutil.mavlink.MAV_CMD_VIDEO_STOP_CAPTURE,  # command to stop video capture
+        0, 0, 0, 0, 0, 0, 0,
         print("Sent MAV_CMD_VIDEO_STOP_CAPTURE command")
-        )
+    )
+    connection.send_mavlink(msg)
+    time.sleep(10)
+    connection.send_mavlink(msg2)
     connection.close()
 
 
