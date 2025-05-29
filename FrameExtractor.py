@@ -8,6 +8,7 @@ from pymavlink import mavutil
 dir_path = r'replace_with_dir'
 imageDirectory = r'replace_with_dir'
 connection = mavutil.mavlink_connection('udpin:0.0.0.0.14550') #example pin idk about mavutil
+videoFile = None
 
 def start_hotkey(): # Creates the hotkey's function
     print("Hotkey pressed")
@@ -17,6 +18,7 @@ def start_hotkey(): # Creates the hotkey's function
     time.sleep(1)  # Wait for 1 second before extracting frames
     get_latest_file(dir_path)  # Get the latest video file
     videoFile = r"{}".format(get_latest_file(dir_path))
+    video = VideoFileClip(videoFile) # Load the video files
     extract_frames(video, imageDirectory) # Calls extraction function
 
 def extract_frames(video, imageDirectory):
@@ -75,8 +77,7 @@ def start_video_capture():
     connection.close()
 
 
-# Create the VideoFileClip object
-video = VideoFileClip(videoFile)
+
 
 # Creates the hotkey
 keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
