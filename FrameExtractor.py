@@ -2,12 +2,17 @@ from moviepy.editor import VideoFileClip
 import os
 import subprocess #possibly starts a vbs file
 import keyboard
+from pymavlink import mavutil
 
 videoFile = r'replace_with_dir'
 imageDirectory = r'replace_with_dir'
+connection = mavutil.mavlink_connection('udpin:0.0.0.0.14550') #example pin idk about mavutil
 
 def start_hotkey(): # Creates the hotkey's function
     print("Hotkey pressed")
+    connect_to_mavlink()  # Connect to MAVLink
+    start_video_capture()  # Start video capture
+    wait.sleep(1)  # Wait for 1 second before extracting frames
     extract_frames(video, imageDirectory) # Calls extraction function
 
 def extract_frames(video, imageDirectory):
@@ -24,6 +29,24 @@ def extract_frames(video, imageDirectory):
             imagepath = os.path.join(imageDirectory, frame_filename)
             video.save_frame(imagepath, t)
             print(f"Saved frame at {t} seconds: {imagepath}")
+
+def connect_to_mavlink():
+    try:
+        connection.wait_heartbeat()
+        print("MAVLink connection established")
+    except Exception as e:
+        print(f"Failed to connect to MAVLink: {e}")
+
+def start_video_capture():
+    msg = connection.message_factory.command_long_encode(
+        0, 0,  # target_system, target_component
+        mavutil.mavlink.MAV_CMD_VIDEO_START_CAPTURE,  # command
+        0,  # confirmation
+        1,  # param1 (1 to start, 0 to stop)
+        0, 0, 0, 0, 0, 0  # param2, param3, param4, param5, param6, param7
+    )
+    connection.send(msg)
+    print("Sent MAV_CMD_VIDEO_START_CAPTURE command")
 
 # Create the VideoFileClip object
 video = VideoFileClip(videoFile)
