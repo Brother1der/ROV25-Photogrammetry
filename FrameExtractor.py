@@ -23,8 +23,8 @@ def start_hotkey(): # Creates the hotkey's function
     video = VideoFileClip(videoFile) # Load the video files
     extract_frames(video, imageDirectory) # Calls extraction function
     time.sleep(1)
-    subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
-    subprocess.run(["cscript scriptname.vbs"], shell=True)
+    os.chdir("C:\\Windows\\Scripts")
+    subprocess.run(["cscript", "scriptname.vbs"], shell=True)
 
 def extract_frames(video, imageDirectory):
     if not os.path.exists(imageDirectory):
