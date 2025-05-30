@@ -1,4 +1,12 @@
 from pymavlink import mavutil
+imort time
+
+
+try:
+    connection = mavutil.mavlink_connection('udpin:localhost:14550')
+    print("Connection established successfully.")
+except Exception as e:
+    print(f"Failed to connect: {e}")
 
 try:
     connection.wait_heartbeat(timeout=5)
@@ -7,3 +15,15 @@ except mavutil.MavlinkTimeoutError:
     print("No heartbeat received within the timeout period.")
 except Exception as e:
     print(f"An error occurred: {e}")
+
+time.sleep(1)
+
+try:
+    connection.mavutil.mav.command_request_message(
+        connection.target_system,
+        connection.target_component,
+        mavutil.mavlink.MAV_CMD_REQUEST_MESSAGE,
+        0,  # Confirmation
+        mavutil.mavlink.MAVLINK_MSG_ID_HEARTBEAT,  # Message ID
+        0, 0, 0, 0, 0, 0
+    )
