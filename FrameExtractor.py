@@ -22,6 +22,9 @@ def start_hotkey(): # Creates the hotkey's function
     videoFile = r"{}".format(get_latest_file(dir_path))
     video = VideoFileClip(videoFile) # Load the video files
     extract_frames(video, imageDirectory) # Calls extraction function
+    time.sleep(1)
+    subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
+    subprocess.run(["cscript scriptname.vbs"], shell=True)
 
 def extract_frames(video, imageDirectory):
     if not os.path.exists(imageDirectory):
@@ -91,8 +94,5 @@ def start_video_capture():
 # Creates the hotkey
 keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
-# Run VBS file
-subprocess.run(["cd", "C:\Windows\Scripts"], shell=True)
-subprocess.run(["cscript scriptname.vbs"], shell=True)
-
+wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
