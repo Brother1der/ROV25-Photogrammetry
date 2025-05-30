@@ -1,0 +1,9 @@
+from pymavlink import mavutil
+
+try:
+    connection.wait_heartbeat(timeout=5)
+    print ("Heartbeat received from the vehicle.")
+except mavutil.MavlinkTimeoutError:
+    print("No heartbeat received within the timeout period.")
+except Exception as e:
+    print(f"An error occurred: {e}")
