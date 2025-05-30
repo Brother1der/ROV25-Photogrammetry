@@ -1,5 +1,5 @@
 from pymavlink import mavutil
-imort time
+import time
 
 
 try:
