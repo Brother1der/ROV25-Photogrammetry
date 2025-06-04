@@ -19,10 +19,10 @@ def start_hotkey(): # Creates the hotkey's function
     start_video_capture()  # Start video capture
     time.sleep(1)  # Wait for 1 second before extracting frames
     get_latest_file(dir_path)  # Get the latest video file
-    videoFile = r"{}".format(get_latest_file(dir_path)) # reason we do the whole .format thingy is so that we can get the raw path of the file, saving headaches later
+    videoFile = r"{}".format(get_latest_file(dir_path)) # reason we do the whole .format thingy is so that we can get the raw path of the file, saving headaches and code later
     video = VideoFileClip(videoFile) # Load the video files
     extract_frames(video, imageDirectory) # Calls extraction function
-    time.sleep(1)
+    time.sleep(1) # Wait for 1 second so all the frames are saved and ready
     os.chdir("C:\\Windows\\Scripts")
     subprocess.run(["cscript", "scriptname.vbs"], shell=True)
 
