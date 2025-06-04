@@ -1,7 +1,7 @@
 # ROV25-Photogrammetry
 
-Welcome: This is the repository for a WIP system that runs photogrammetry while the ROV is being driven. It contains code for taking JPEG images from a MP4 and inserting them into PTGUI, the ROV's selected photogrammetry software.
+Welcome: This is the repository for a WIP system that runs photogrammetry while the ROV is being driven. It contains code for taking a video of the ROV's feed using QGroundControl, and then taking JPEG images from an MP4 and inserting them into PTGUI, the ROV's selected photogrammetry software.
 
 ## Workflow
 
-This repository is only one branch, mainly because the software really isn't that complicated. I'll probably work on organizing it for later if it becomes more complicated. Things may get a little wonky though.
+This repository has three branches. The Main is for the current build of the software, while the other two are for testing our new ideas for efficiency.
