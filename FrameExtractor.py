@@ -1,15 +1,16 @@
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 import os
 import time
 import sys
 import subprocess
 import keyboard
 import glob
+import serial
 from pymavlink import mavutil
-
+ 
 dir_path = r'replace_with_dir'
 imageDirectory = r'replace_with_dir'
-connection = mavutil.mavlink_connection('udpin:0.0.0.0.14550') #example pin idk about mavutil
+connection = mavutil.mavlink_connection('192.168.2.2') #example pin idk about mavutil
 videoFile = None
 
 def start_hotkey(): # Creates the hotkey's function
