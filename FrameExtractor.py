@@ -23,9 +23,7 @@ def start_hotkey(): # Creates the hotkey's function
     videoFile = r"{}".format(get_latest_file(dir_path)) # reason we do the whole .format thingy is so that we can get the raw path of the file, saving headaches and code later
     video = VideoFileClip(videoFile) # Load the video files
     extract_frames(video, imageDirectory) # Calls extraction function
-    time.sleep(1) # Wait for 1 second so all the frames are saved and ready
-    os.chdir("C:\\Windows\\Scripts")
-    subprocess.run(["cscript", "scriptname.vbs"], shell=True)
+    time.sleep(1) # Wait for 1 second so all the frames are saved
 
 def extract_frames(video, imageDirectory):
     if not os.path.exists(imageDirectory):
@@ -44,15 +42,6 @@ def extract_frames(video, imageDirectory):
     video.close()
 
 def get_latest_file(dir_path):
-    """
-    Gets the latest file in a directory based on modification time.
-
-    Args:
-        dir_path (str): The path to the directory.
-
-    Returns:
-        str: The path to the latest file, or None if the directory is empty or an error occurs.
-    """
     try:
         list_of_files = glob.glob(os.path.join(dir_path, '*.mp4'))  # Get list of all mp4 files in directory
         if not list_of_files:
@@ -97,3 +86,4 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
