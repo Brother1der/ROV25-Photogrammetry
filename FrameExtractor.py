@@ -23,7 +23,7 @@ def start_hotkey(): # Creates the hotkey's function
     videoFile = r"{}".format(get_latest_file(dir_path)) # reason we do the whole .format thingy is so that we can get the raw path of the file, saving headaches and code later
     video = VideoFileClip(videoFile) # Load the video files
     extract_frames(video, imageDirectory) # Calls extraction function
-    time.sleep(1) # Wait for 1 second so all the frames are saved
+    time.sleep(5) # Wait for 5 seconds so all the frames are saved to be safe.
 
 def extract_frames(video, imageDirectory):
     if not os.path.exists(imageDirectory):
@@ -86,4 +86,5 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
