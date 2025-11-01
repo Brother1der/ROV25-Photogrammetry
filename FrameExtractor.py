@@ -6,6 +6,7 @@ import subprocess
 import keyboard
 import glob
 import serial
+import pycolmap
 from pymavlink import mavutil
  
 dir_path = r'replace_with_dir'
@@ -86,5 +87,6 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
 
