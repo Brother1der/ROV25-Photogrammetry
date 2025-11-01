@@ -11,7 +11,11 @@ from pymavlink import mavutil
  
 video_dir_path = r'replace_with_dir' #Directory of the folder that holds the videos
 imageDirectory = r'replace_with_dir' #Directory of Folder with all of the images.
-connection = mavutil.mavlink_connection('192.168.2.2') #example pin idk about mavutil
+connection = None
+try:
+    connection = mavutil.mavlink_connection('192.168.2.2') #example pin idk about mavutil
+except Exception as n:
+    connection = None
 videoFile = None
 
 def start_hotkey(): # Creates the hotkey's function
@@ -87,4 +91,5 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
