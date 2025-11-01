@@ -34,7 +34,7 @@ def extract_frames(video, imageDirectory):
     num_frames = int(video.fps * video.duration)
    
     for i in range(num_frames):
-        if i % 5 == 0:  # Save every 5 frames
+        if i % 5 == 0:  # WE MAY WANT TO MAKE IT TAKE ALL OF THE FRAMES FROM THE VIDEO FOR MORE ACCURATE RECONSTRUCTION.
             t = i / frame_rate
             frame_filename = f"{int(t*frame_rate)}.png"
             imagepath = os.path.join(imageDirectory, frame_filename)
@@ -87,3 +87,4 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
