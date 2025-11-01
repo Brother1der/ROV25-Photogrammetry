@@ -85,11 +85,50 @@ def start_video_capture():
 
 
 
+def create_3D_reconstruction(width, height, output_folder):
+    reconstruction = pycolmap.Reconstruction()
+    cameraType = pycolmap.CameraModelId.SIMPLE_RADIAL #Most likely to be what we're going to use.
+    params = [1500,960,540] # Focal length, CX, CY
+    # Try to figure out what CX and CY are for ROV? Not entirely certain as to what it is. Has to do with camera specs.
+    # Online sources pointed me to look at this. > https://en.wikipedia.org/wiki/Camera_resectioning
+    # See what you can pry from this article if you could.
+    reconstruction.add_camera(1,cameraType, width, height, params)
+    #Camera ID is 1.
+
+    # Add images to the reconstruction.
+    try:
+        list_of_files = glob.glob(os.path.join(imageDirectory, '*.png'))  # Get list of all image files in directory
+        if not list_of_files:
+            pass
+        count = 1
+        for n in list_of_files:
+            reconstruction.add_image(count, n, 1)
+            count += 1
+    except OSError as e:
+         print(f"Error accessing directory: {e}")
+         return None
+    try:
+        list_of_files = glob.glob(os.path.join(imageDirectory, '*.png'))  # Get list of all image files in directory. We'll make this more efficient later.
+        if not list_of_files:
+            pass
+
+        pycolmap.extract_features(output_folder, imageDirectory)
+        pycolmap.match_features(output_folder)
+        pycolmap.incremental_reconstruction(output_folder, output_folder)
+
+        reconstruction = pycolmap.Reconstruction(output_folder + "/sparse") # I am sorry I totally used the google ai for this. but genuinely there is like NO documentation for this stupid library. Also I haven't tested it. (I'm not gonna test it for a decent bit, at least.)
+        # Important things needed for testing: Way to figure out CX and CY for cameras. Way to figure out Focal Length as well. Known width and height (in pixels) of our images. We'll polish this out later and see if it even works, but for now, it's something.
+        reconstruction.write(output_folder + "/sparse")
+    except OSError as e:
+         print(f"Error accessing directory: {e}")
+         return None
+
 
 # Creates the hotkey
 keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
 
