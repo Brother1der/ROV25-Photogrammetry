@@ -9,8 +9,8 @@ import serial
 import pycolmap
 from pymavlink import mavutil
  
-dir_path = r'replace_with_dir'
-imageDirectory = r'replace_with_dir'
+video_dir_path = r'replace_with_dir' #Directory of the folder that holds the videos
+imageDirectory = r'replace_with_dir' #Directory of Folder with all of the images.
 connection = mavutil.mavlink_connection('192.168.2.2') #example pin idk about mavutil
 videoFile = None
 
@@ -20,8 +20,8 @@ def start_hotkey(): # Creates the hotkey's function
     time.sleep(1)  # Wait for connection to establish
     start_video_capture()  # Start video capture
     time.sleep(1)  # Wait for 1 second before extracting frames
-    get_latest_file(dir_path)  # Get the latest video file
-    videoFile = r"{}".format(get_latest_file(dir_path)) # reason we do the whole .format thingy is so that we can get the raw path of the file, saving headaches and code later
+    videoFile = get_latest_file(video_dir_path)  # Get the latest video file
+    videoFile = r"{}".format(videoFile) # reason we do the whole .format thingy is so that we can get the raw path of the file, saving headaches and code later
     video = VideoFileClip(videoFile) # Load the video files
     extract_frames(video, imageDirectory) # Calls extraction function
     time.sleep(5) # Wait for 5 seconds so all the frames are saved to be safe.
@@ -87,6 +87,3 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
-
-
-
