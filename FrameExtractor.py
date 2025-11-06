@@ -88,7 +88,7 @@ def start_video_capture():
 def create_3D_reconstruction(width, height, output_folder):
     reconstruction = pycolmap.Reconstruction()
     cameraType = pycolmap.CameraModelId.SIMPLE_RADIAL #Most likely to be what we're going to use.
-    params = [1500,960,540] # Focal length, CX, CY
+    params = [4500,960,540] # Focal length, CX, CY
     # Try to figure out what CX and CY are for ROV? Not entirely certain as to what it is. Has to do with camera specs.
     # Online sources pointed me to look at this. > https://en.wikipedia.org/wiki/Camera_resectioning
     # See what you can pry from this article if you could.
@@ -118,6 +118,7 @@ def create_3D_reconstruction(width, height, output_folder):
 
         reconstruction = pycolmap.Reconstruction(output_folder + "/sparse") # I am sorry I totally used the google ai for this. but genuinely there is like NO documentation for this stupid library. Also I haven't tested it. (I'm not gonna test it for a decent bit, at least.)
         # Important things needed for testing: Way to figure out CX and CY for cameras. Way to figure out Focal Length as well. Known width and height (in pixels) of our images. We'll polish this out later and see if it even works, but for now, it's something.
+        #elliot's phone info: 23mm focal length
         reconstruction.write(output_folder + "/sparse")
     except OSError as e:
          print(f"Error accessing directory: {e}")
@@ -129,6 +130,7 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
 
 
