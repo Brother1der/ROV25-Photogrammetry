@@ -90,12 +90,15 @@ def create_3D_reconstruction(width, height, output_folder):
     cameraType = pycolmap.CameraModelId.SIMPLE_RADIAL #Most likely to be what we're going to use.
     params = [5880,585,1266] # Focal length, CX, CY
     # Try to figure out what CX and CY are for ROV? Not entirely certain as to what it is. Has to do with camera specs.
-    # Online sources pointed me to look at this. > https://en.wikipedia.org/wiki/Camera_resectioning
-    # See what you can pry from this article if you could.
+    # GOOGLE AI ACTUALLY WAS WRONG, WHO COULD'VE THOUGHT?
+    # But I forgot to commit to this last night after working on the program so I have to go back into this.
     # Present specs are for Graham's Iphone.
-    reconstruction.add_camera(1,cameraType, width, height, params) 
-    #Camera ID is 1.
-
+    camera = pycolmap.Camera.create(1, cameraType, 5880, 480, 853)
+    
+    reconstruction.add_camera(camera)
+    # Camera ID is 1.
+    # Oh yeah btw last time I tested this it said that the parameters sucked and were inaccurate.
+ 
     # Add images to the reconstruction.
     try:
         list_of_files = glob.glob(os.path.join(imageDirectory, '*.png'))  # Get list of all image files in directory
@@ -103,6 +106,7 @@ def create_3D_reconstruction(width, height, output_folder):
             pass
         count = 1
         for n in list_of_files:
+            # Oh yeah btw this doesn't work. It also needs to be turned into an image that pycolmap can work with. (https://colmap.github.io/pycolmap/pycolmap.html#pycolmap.Image) FIGURE OUT HOW TO DO THIS!!!!!!!!!!
             reconstruction.add_image(count, n, 1)
             count += 1
     except OSError as e:
@@ -131,6 +135,7 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
 
 
