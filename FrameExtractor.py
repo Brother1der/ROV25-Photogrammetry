@@ -98,7 +98,28 @@ def create_3D_reconstruction(width, height, output_folder):
     reconstruction.add_camera(camera)
     # Camera ID is 1.
     # Oh yeah btw last time I tested this it said that the parameters sucked and were inaccurate.
- 
+    '''
+    don't worry gemini will work this time I swear.
+    # 1. Load the image file using Pillow
+    image_path = 'path/to/your/image.jpg'  # Replace with your image file path
+    img_pil = Image.open(image_path).convert('RGB') # Load as RGB
+    
+    # 2. (Optional) Convert to grayscale if needed for SIFT extraction
+    # SIFT feature extraction in pycolmap often expects grayscale images.
+    img_grayscale_pil = ImageOps.grayscale(img_pil)
+    
+    # 3. Convert the Pillow image object to a NumPy array
+    # Ensure the data type is float and normalized to [0, 1] if required by the pycolmap function
+    img_np = np.array(img_grayscale_pil).astype(np.float32) / 255.0
+    
+    # Now, 'img_np' is a NumPy array representing your image, ready for pycolmap functions
+    # For example, to extract SIFT features:
+    sift = pycolmap.Sift()
+    keypoints, descriptors = sift.extract(img_np)
+    
+    print(f"Image shape: {img_np.shape}")
+    print(f"Number of keypoints: {len(keypoints)}")
+    '''
     # Add images to the reconstruction.
     try:
         list_of_files = glob.glob(os.path.join(imageDirectory, '*.png'))  # Get list of all image files in directory
@@ -135,6 +156,7 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
 
 
