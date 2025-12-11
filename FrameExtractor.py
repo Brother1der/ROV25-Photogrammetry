@@ -86,16 +86,31 @@ def start_video_capture():
 
 
 def create_3D_reconstruction(width, height, output_folder):
+    print("0")
     reconstruction = pycolmap.Reconstruction()
+    print("1")
     cameraType = pycolmap.CameraModelId.SIMPLE_RADIAL #Most likely to be what we're going to use.
+    print("2")
     params = [5880,585,1266] # Focal length, CX, CY
     # Try to figure out what CX and CY are for ROV? Not entirely certain as to what it is. Has to do with camera specs.
-    # GOOGLE AI ACTUALLY WAS WRONG, WHO COULD'VE THOUGHT?
-    # But I forgot to commit to this last night after working on the program so I have to go back into this.
+    # Online sources pointed me to look at this. > https://en.wikipedia.org/wiki/Camera_resectioning
+    # See what you can pry from this article if you could.
     # Present specs are for Graham's Iphone.
-    camera = pycolmap.Camera.create(1, cameraType, 5880, 480, 853)
-    
-    reconstruction.add_camera(camera)
+    camera = pycolmap.Camera() #Maybe we should reconsider how we're doing camera measurement stuff here because apparertly it is bad. also I probavbly messed up the width and height.
+    print("3") 
+    #1,cameraType, 5880, width, height
+    camera.camera_id = 1
+    print("4")
+    camera.model = cameraType
+    print("5")
+    #camera.focal_length(5880) #Commented out until I can figure out how to make it work
+    print("6")
+    camera.width = width
+    print("7")
+    camera.height = height
+    print("8")
+    camera.params = params
+    print("A")
     # Camera ID is 1.
     # Oh yeah btw last time I tested this it said that the parameters sucked and were inaccurate.
     '''
@@ -156,6 +171,7 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
 
 
