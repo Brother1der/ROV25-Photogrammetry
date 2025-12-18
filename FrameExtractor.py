@@ -86,84 +86,17 @@ def start_video_capture():
 
 
 def create_3D_reconstruction(width, height, output_folder):
-    print("0")
-    reconstruction = pycolmap.Reconstruction()
-    print("1")
-    cameraType = pycolmap.CameraModelId.SIMPLE_RADIAL #Most likely to be what we're going to use.
-    print("2")
-    params = [5880,585,1266] # Focal length, CX, CY
-    # Try to figure out what CX and CY are for ROV? Not entirely certain as to what it is. Has to do with camera specs.
-    # Online sources pointed me to look at this. > https://en.wikipedia.org/wiki/Camera_resectioning
-    # See what you can pry from this article if you could.
-    # Present specs are for Graham's Iphone.
-    camera = pycolmap.Camera() #Maybe we should reconsider how we're doing camera measurement stuff here because apparertly it is bad. also I probavbly messed up the width and height.
-    print("3") 
-    #1,cameraType, 5880, width, height
-    camera.camera_id = 1
-    print("4")
-    camera.model = cameraType
-    print("5")
-    #camera.focal_length(5880) #Commented out until I can figure out how to make it work
-    print("6")
-    camera.width = width
-    print("7")
-    camera.height = height
-    print("8")
-    camera.params = params
-    print("A")
-    # Camera ID is 1.
-    # Oh yeah btw last time I tested this it said that the parameters sucked and were inaccurate.
-    '''
-    don't worry gemini will work this time I swear.
-    # 1. Load the image file using Pillow
-    image_path = 'path/to/your/image.jpg'  # Replace with your image file path
-    img_pil = Image.open(image_path).convert('RGB') # Load as RGB
-    
-    # 2. (Optional) Convert to grayscale if needed for SIFT extraction
-    # SIFT feature extraction in pycolmap often expects grayscale images.
-    img_grayscale_pil = ImageOps.grayscale(img_pil)
-    
-    # 3. Convert the Pillow image object to a NumPy array
-    # Ensure the data type is float and normalized to [0, 1] if required by the pycolmap function
-    img_np = np.array(img_grayscale_pil).astype(np.float32) / 255.0
-    
-    # Now, 'img_np' is a NumPy array representing your image, ready for pycolmap functions
-    # For example, to extract SIFT features:
-    sift = pycolmap.Sift()
-    keypoints, descriptors = sift.extract(img_np)
-    
-    print(f"Image shape: {img_np.shape}")
-    print(f"Number of keypoints: {len(keypoints)}")
-    '''
-    # Add images to the reconstruction.
-    try:
-        list_of_files = glob.glob(os.path.join(imageDirectory, '*.png'))  # Get list of all image files in directory
-        if not list_of_files:
-            pass
-        count = 1
-        for n in list_of_files:
-            # Oh yeah btw this doesn't work. It also needs to be turned into an image that pycolmap can work with. (https://colmap.github.io/pycolmap/pycolmap.html#pycolmap.Image) FIGURE OUT HOW TO DO THIS!!!!!!!!!!
-            reconstruction.add_image(count, n, 1)
-            count += 1
-    except OSError as e:
-         print(f"Error accessing directory: {e}")
-         return None
-    try:
-        list_of_files = glob.glob(os.path.join(imageDirectory, '*.png'))  # Get list of all image files in directory. We'll make this more efficient later.
-        if not list_of_files:
-            pass
+    # Sparse Reconstruction
+    #mvs_path = output_folder + "\\" + "mvs"
+    database_path = output_folder + "\\" + "database.db"
 
-        pycolmap.extract_features(output_folder, imageDirectory)
-        pycolmap.match_features(output_folder)
-        pycolmap.incremental_reconstruction(output_folder, output_folder)
-
-        reconstruction = pycolmap.Reconstruction(output_folder + "/sparse") # I am sorry I totally used the google ai for this. but genuinely there is like NO documentation for this stupid library. Also I haven't tested it. (I'm not gonna test it for a decent bit, at least.)
-        # Important things needed for testing: Way to figure out CX and CY for cameras. Way to figure out Focal Length as well. Known width and height (in pixels) of our images. We'll polish this out later and see if it even works, but for now, it's something.
-        #elliot's phone info: 23mm focal length
-        reconstruction.write(output_folder + "/sparse")
-    except OSError as e:
-         print(f"Error accessing directory: {e}")
-         return None
+    pycolmap.extract_features(database_path, imageDirectory)
+    pycolmap.match_exhaustive(database_path)
+    maps = pycolmap.incremental_mapping(database_path, imageDirectory, output_folder)
+    print(maps)
+    maps[0].write(output_folder)
+    maps[0].export_PLY(output_folder + "\\" + "sparse.ply", output_folder)
+    # Have to figure out how to properly export this. hasn't been working too well for me.
 
 
 # Creates the hotkey
@@ -171,6 +104,7 @@ keyboard.add_hotkey('ctrl+shift+a', start_hotkey)
 
 wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
 sys.exit(0)  # Exit the script
+
 
 
 
