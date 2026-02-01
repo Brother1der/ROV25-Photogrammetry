@@ -85,17 +85,75 @@ def start_video_capture():
 
 
 
-def create_3D_reconstruction(width, height, output_folder):
-    # Sparse Reconstruction
-    database_path = output_folder + "\\" + "database.db"
+def create_3D_reconstruction(output_folder):
+    '''
+    don't worry gemini will work this time I swear.
+    # 1. Load the image file using Pillow
+    image_path = 'path/to/your/image.jpg'  # Replace with your image file path
+    img_pil = Image.open(image_path).convert('RGB') # Load as RGB
     
+    # 2. (Optional) Convert to grayscale if needed for SIFT extraction
+    # SIFT feature extraction in pycolmap often expects grayscale images.
+    img_grayscale_pil = ImageOps.grayscale(img_pil)
+    
+    # 3. Convert the Pillow image object to a NumPy array
+    # Ensure the data type is float and normalized to [0, 1] if required by the pycolmap function
+    img_np = np.array(img_grayscale_pil).astype(np.float32) / 255.0
+    
+    # Now, 'img_np' is a NumPy array representing your image, ready for pycolmap functions
+    # For example, to extract SIFT features:
+    sift = pycolmap.Sift()
+    keypoints, descriptors = sift.extract(img_np)
+    
+    print(f"Image shape: {img_np.shape}")
+    print(f"Number of keypoints: {len(keypoints)}")
+    '''
+
+    # Sparse Reconstruction
+    mvs_path = output_folder + "\\" + "mvs"
+    database_path = output_folder + "\\" + "database.db"
+
     pycolmap.extract_features(database_path, imageDirectory)
     pycolmap.match_exhaustive(database_path)
     maps = pycolmap.incremental_mapping(database_path, imageDirectory, output_folder)
     print(maps)
     maps[0].write(output_folder)
-    maps[0].export_PLY(output_folder + "\\" + "sparse.ply", output_folder)
-    # Have to figure out how to properly export this. hasn't been working too well for me.
+    maps[0].export_PLY(output_folder + "\\sparse.ply")
+
+    # dense reconstruction
+    pycolmap.undistort_images(mvs_path, output_folder, imageDirectory) #Eventually will be updated with camera.
+    pycolmap.patch_match_stereo(mvs_path) 
+    print("0")
+    pycolmap.stereo_fusion(mvs_path + "\\" + "dense.ply", mvs_path)
+
+# Gets y-midpoint (index 0) and total height (index 1)
+def get_vertical_details(reconstruction):
+    list_of_points = reconstruction.points3D.items()
+    list_of_y_values = list_of_points.xyz[:,1]
+    return [((max(list_of_y_values) + min(list_of_y_values)) / 2), abs(max(list_of_y_values) - min(list_of_y_values))]
+
+# Gets points within a certain y-boundary from the midpoint. Precision denotes how much of the height will be factored in for using points. (Ex. 0.1 is 0.1 of the total height.) Recommend using precision that is < 0.2 and > 0.
+# Uses these points to get the dimensions of the coral prop for resizing.
+# Returns the larger of the two dimensions (index 0) and the lesser (index 2). Assumes that boundary used to scale is the longer of the two.
+def get_reconstruction_resize_dimensions(reconstruction, precision):
+    list_of_points = reconstruction.points3D.items()
+    y_details = get_vertical_details(reconstruction)
+    y_height = y_details[1] * precision
+    y_mid = y_details[0] - (y_details[1] * 0.1)
+    filtered_points = []
+    for point3D in list_of_points.items():
+        if point3D.xyz[1] >= y_mid + y_height and point3D.xyz[1] <= y_mid - y_height:
+            filtered_points.append(point3D)
+    list_of_x_values = filtered_points.xyz[:,0]
+    list_of_z_values = filtered_points.xyz[:,2]
+    x_total = abs(max(list_of_x_values) - min(list_of_x_values))
+    z_total = abs(max(list_of_z_values) - min(list_of_z_values))
+    return (max(x_total, z_total), min(x_total, z_total))
+
+def resize_dimensions(reconstruction, given_dimension, reconstruction_dimensions):
+    transform_instructions = pycolmap.Sim3d()
+    transform_instructions.scale = reconstruction_dimensions[0] / given_dimension
+    reconstruction.transform(transform_instructions)
 
 
 # Creates the hotkey
@@ -103,6 +161,7 @@ def create_3D_reconstruction(width, height, output_folder):
 
     wait = keyboard.wait('esc')  # Wait for the 'esc' key to be pressed
     sys.exit(0)  # Exit the script
+
 
 
 
