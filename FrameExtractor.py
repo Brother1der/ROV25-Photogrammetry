@@ -128,24 +128,22 @@ def create_3D_reconstruction(output_folder):
 
 # Gets y-midpoint (index 0) and total height (index 1)
 def get_vertical_details(reconstruction):
-    list_of_points = reconstruction.points3D.items()
-    list_of_y_values = list_of_points.xyz[:,1]
+    coords = np.array([point3D.xyz for point3D in reconstruction.points3D.values()])
+    list_of_y_values = coords[:, 1]
     return [((max(list_of_y_values) + min(list_of_y_values)) / 2), abs(max(list_of_y_values) - min(list_of_y_values))]
 
 # Gets points within a certain y-boundary from the midpoint. Precision denotes how much of the height will be factored in for using points. (Ex. 0.1 is 0.1 of the total height.) Recommend using precision that is < 0.2 and > 0.
 # Uses these points to get the dimensions of the coral prop for resizing.
 # Returns the larger of the two dimensions (index 0) and the lesser (index 2). Assumes that boundary used to scale is the longer of the two.
 def get_reconstruction_resize_dimensions(reconstruction, precision):
-    list_of_points = reconstruction.points3D.items()
+    coords = np.array([point3D.xyz for point3D in reconstruction.points3D.values()])
     y_details = get_vertical_details(reconstruction)
     y_height = y_details[1] * precision
     y_mid = y_details[0] - (y_details[1] * 0.1)
-    filtered_points = []
-    for point3D in list_of_points.items():
-        if point3D.xyz[1] >= y_mid + y_height and point3D.xyz[1] <= y_mid - y_height:
-            filtered_points.append(point3D)
-    list_of_x_values = filtered_points.xyz[:,0]
-    list_of_z_values = filtered_points.xyz[:,2]
+    mask = (coords[:, 1] <= y_mid + y_height) & (coords[:, 1] >= y_mid - y_height)
+    filtered_coords = coords[mask]
+    list_of_x_values = filtered_coords[:, 0]
+    list_of_z_values = filtered_coords[:, 2]
     x_total = abs(max(list_of_x_values) - min(list_of_x_values))
     z_total = abs(max(list_of_z_values) - min(list_of_z_values))
     return (max(x_total, z_total), min(x_total, z_total))
@@ -154,6 +152,16 @@ def resize_dimensions(reconstruction, given_dimension, reconstruction_dimensions
     transform_instructions = pycolmap.Sim3d()
     transform_instructions.scale = reconstruction_dimensions[0] / given_dimension
     reconstruction.transform(transform_instructions)
+    #If this doesn't work, try this script instead:
+    '''
+    scale = given_dimension / reconstruction_dimensions[0]
+    transform = pycolmap.SimilarityTransform3(
+        scale,
+        np.array([1, 0, 0, 0], dtype=np.float64),
+        np.array([0, 0, 0], dtype=np.float64)
+    )
+    reconstruction.transform(transform)
+    '''
 
 
 # Creates the hotkey
